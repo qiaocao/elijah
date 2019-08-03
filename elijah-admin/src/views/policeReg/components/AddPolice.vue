@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="ad-title">新增警员</div>
-    <el-form ref="form" :model="addPoliceFrom" label-width="80px" :rules="rules">
+    <el-form ref="form" :model="addPoliceFrom" label-width="120px" :rules="rules">
       <el-form-item label="警员编号" prop="police_code">
         <el-input v-model="addPoliceFrom.police_code" />
       </el-form-item>
@@ -14,26 +14,75 @@
       <el-form-item label="IP地址" prop="IP">
         <el-input v-model="addPoliceFrom.IP" />
       </el-form-item>
-      <el-form-item label="警员标识" prop="IP">
-        <el-input v-model="addPoliceFrom.IP" />
+      <el-form-item label="警员标识" prop="police_flag">
+        <el-switch
+          v-model="addPoliceFrom.police_flag"
+          active-text="警员"
+          inactive-text="非警员"
+          active-value="1"
+          inactive-value="0"
+        />
       </el-form-item>
-      <el-form-item label="是否锁定" prop="IP">
-        <el-input v-model="addPoliceFrom.IP" />
+      <el-form-item label="是否锁定" prop="islock">
+        <el-switch
+        v-model="addPoliceFrom.islock"
+        active-text="锁定"
+        active-value="1"
+        inactive-value="0"
+        />
       </el-form-item>
-      <el-form-item label="用户有效期" prop="IP">
-        <el-input v-model="addPoliceFrom.IP" />
+      <el-form-item label="用户有效" prop="user_effective_flag">
+        <el-switch
+          v-model="addPoliceFrom.user_effective_flag"
+          active-text="永久有效"
+          active-value="1"
+          inactive-value="0"
+        />
       </el-form-item>
-      <el-form-item label="密码有效期" prop="IP">
-        <el-input v-model="addPoliceFrom.IP" />
+      <el-form-item label="用户有效期" prop="user_effective">
+        <el-date-picker
+          v-model="addPoliceFrom.user_effective"
+          type="datetime"
+          placeholder="选择日期时间"
+        />
       </el-form-item>
-      <el-form-item label="用户有效" prop="IP">
-        <el-input v-model="addPoliceFrom.IP" />
+      <el-form-item label="密码有效" prop="pwd_effective_flag">
+        <el-switch
+          v-model="addPoliceFrom.pwd_effective_flag"
+          active-text="永久有效"
+          active-value="1"
+          inactive-value="0"
+        />
       </el-form-item>
-      <el-form-item label="密码有效" prop="IP">
-        <el-input v-model="addPoliceFrom.IP" />
+      <el-form-item label="密码有效期" prop="pwd_effective">
+        <el-date-picker
+          v-model="addPoliceFrom.pwd_effective"
+          type="datetime"
+          placeholder="选择日期时间"
+        />
       </el-form-item>
-      <el-form-item label="允许登录时间" prop="IP">
-        <el-input v-model="addPoliceFrom.IP" />
+      <el-form-item label="允许登录时间" prop="startTime">
+        <el-time-select
+          v-model="addPoliceFrom.startTime"
+          placeholder="起始时间"
+          style="width:160px"
+          :picker-options="{
+            start: '00:00',
+            step: '01:00',
+            end: '24:00'
+          }"
+        />
+        <el-time-select
+          v-model="addPoliceFrom.endTime"
+          placeholder="结束时间"
+          style="width:160px"
+          :picker-options="{
+            start: '00:00',
+            step: '01:00',
+            end: '24:00',
+            minTime: addPoliceFrom.startTime
+          }"
+        />
       </el-form-item>
       <el-form-item label="角色权限" prop="roleid">
         <el-select v-model="addPoliceFrom.roleid" placeholder="请选择" style="width:100%">
@@ -44,7 +93,6 @@
             :value="item.RoleID"
           />
         </el-select>
-        <!-- <el-input v-model="addPoliceFrom.roleid" /> -->
       </el-form-item>
       <el-form-item label="警员电话" prop="police_tel">
         <el-input v-model="addPoliceFrom.police_tel" />
@@ -71,6 +119,31 @@ export default {
   name: 'AddPolice',
   props: ['depttreedata', 'rolelist'],
   data() {
+    var checkAllowLogTime = (rule, value, callback) => {
+      if (!this.addPoliceFrom.startTime) {
+        return callback(new Error('请填写开始时间'))
+      }
+      if (!this.addPoliceFrom.endTime) {
+        return callback(new Error('请填写结束时间'))
+      }
+      if (this.addPoliceFrom.startTime && this.addPoliceFrom.endTime) {
+         callback()
+      }
+    }
+    var checkUserEffective = (rule, value, callback) => {
+      if (this.addPoliceFrom.user_effective_flag == '0' && !value) {
+        return callback(new Error('请填写用户有效期'))
+      } else {
+        callback()
+      }
+    }
+    var checkPwdEffective = (rule, value, callback) => {
+      if (this.addPoliceFrom.pwd_effective_flag == '0' && !value) {
+        return callback(new Error('请填写密码有效期'))
+      } else {
+        callback()
+      }
+    }
     return {
       addPoliceFrom: {
         police_code: '',
@@ -102,9 +175,6 @@ export default {
           { min: 18, max: 18, message: '请输入18位身份证号', trigger: 'blur' }
         ],
         IP: [{ required: true, message: '请输入IP', trigger: 'blur' }],
-        //  roleid: [
-        //   { required: true, message: '请输入警员姓名', trigger: 'blur' }
-        // ],
         department_codeArr: [
           {
             type: 'array',
@@ -112,7 +182,10 @@ export default {
             message: '请选择警员部门',
             trigger: 'blur'
           }
-        ]
+        ],
+        user_effective: [{ validator: checkUserEffective, trigger: 'change' }],
+        pwd_effective: [{ validator: checkPwdEffective, trigger: 'change' }],
+        // startTime: [{ validator: checkAllowLogTime, trigger: 'blur' }]
       }
     }
   },
@@ -122,7 +195,9 @@ export default {
       this.addPoliceFrom.department_code = this.addPoliceFrom.department_codeArr[
         this.addPoliceFrom.department_codeArr.length - 1
       ]
+      debugger
       this.$refs.form.validate(valid => {
+      console.log("TCL: save -> valid", valid)
         if (valid) {
           this.$post('Police/insert', this.addPoliceFrom).then(json => {
             this.$notify({
