@@ -8,6 +8,33 @@
       <el-form-item label="警员名称" prop="police_name">
         <el-input v-model="addPoliceFrom.police_name" />
       </el-form-item>
+      <el-form-item label="身份证号" prop="id_number">
+        <el-input v-model="addPoliceFrom.id_number" />
+      </el-form-item>
+      <el-form-item label="IP地址" prop="IP">
+        <el-input v-model="addPoliceFrom.IP" />
+      </el-form-item>
+      <el-form-item label="警员标识" prop="IP">
+        <el-input v-model="addPoliceFrom.IP" />
+      </el-form-item>
+      <el-form-item label="是否锁定" prop="IP">
+        <el-input v-model="addPoliceFrom.IP" />
+      </el-form-item>
+      <el-form-item label="用户有效期" prop="IP">
+        <el-input v-model="addPoliceFrom.IP" />
+      </el-form-item>
+      <el-form-item label="密码有效期" prop="IP">
+        <el-input v-model="addPoliceFrom.IP" />
+      </el-form-item>
+      <el-form-item label="用户有效" prop="IP">
+        <el-input v-model="addPoliceFrom.IP" />
+      </el-form-item>
+      <el-form-item label="密码有效" prop="IP">
+        <el-input v-model="addPoliceFrom.IP" />
+      </el-form-item>
+      <el-form-item label="允许登录时间" prop="IP">
+        <el-input v-model="addPoliceFrom.IP" />
+      </el-form-item>
       <el-form-item label="角色权限" prop="roleid">
         <el-select v-model="addPoliceFrom.roleid" placeholder="请选择" style="width:100%">
           <el-option
@@ -51,7 +78,17 @@ export default {
         police_tel: '',
         roleid: '',
         department_code: '',
-        department_codeArr: []
+        department_codeArr: [],
+        id_number: '',
+        police_flag: '',
+        IP: '',
+        islock: '',
+        user_effective: '',
+        pwd_effective: '',
+        user_effective_flag: '',
+        pwd_effective_flag: '',
+        startTime: '',
+        endTime: ''
       },
       rules: {
         police_code: [
@@ -60,6 +97,11 @@ export default {
         police_name: [
           { required: true, message: '请输入警员姓名', trigger: 'blur' }
         ],
+        id_number: [
+          { required: true, message: '请输入身份证号', trigger: 'blur' },
+          { min: 18, max: 18, message: '请输入18位身份证号', trigger: 'blur' }
+        ],
+        IP: [{ required: true, message: '请输入IP', trigger: 'blur' }],
         //  roleid: [
         //   { required: true, message: '请输入警员姓名', trigger: 'blur' }
         // ],
